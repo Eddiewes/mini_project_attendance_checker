@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% block title %}Add Event{% endblock title %}
+{% block content %}
+<div class="container">
+  <div class="text-black text-center font-bold py-2 px-4 rounded"><h1>Add Event</h1></div>
+  <form id="add-event-form" method="post">
+    {% csrf_token %}
+    {% if messages %}
+      <div class="text-red-500" id="error-messages">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      <script>
+        setTimeout(function() {
+          document.getElementById('error-messages').style.opacity = '0';
+          setTimeout(function() {
+            document.getElementById('error-messages').style.display = 'none';
+          }, 3000);
+        }, 3000);
+      </script>
+    {% endif %}
+    {% for field in form %}
+      <div class="mb-6">
+        <label class="block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="text-red-500">
+          {% for error in field.errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <!-- Google Maps Autocomplete -->
+    <div class="mb-6">
+      <label class="block mb-2" for="id_location_address">Location Address</label>
+      <input id="id_location_address" type="text" name="location_address" class="form-control">
+      <input id="id_geolocation" type="hidden" name="geolocation">
+    </div>
+    
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Event</button>
+  </form>
+</div>
+
+<!-- JavaScript for Google Maps Autocomplete -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places"></script>
+<script>
+  function initializeAutocomplete() {
+    var input = document.getElementById('id_location_address');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    var map;
+    var marker;
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+      var place = autocomplete.getPlace();
+      document.getElementById('id_geolocation').value = JSON.stringify({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng()
+      });
+
+      // Initialize map if not already initialized
+      if (!map) {
+        var mapOptions = {
+          center: place.geometry.location,
+          zoom: 15
+        };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        marker = new google.maps.Marker({
+          position: place.geometry.location,
+          map: map,
+          draggable: true
+        });
+
+        // Update location input when marker is dragged
+        google.maps.event.addListener(marker, 'dragend', function(event) {
+          document.getElementById('id_geolocation').value = JSON.stringify({
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng()
+          });
+        });
+      } else {
+        // Update map and marker position
+        map.setCenter(place.geometry.location);
+        marker.setPosition(place.geometry.location);
+      }
+    });
+  }
+  google.maps.event.addDomListener(window, 'load', initializeAutocomplete);
+</script>
+
+{% endblock %}

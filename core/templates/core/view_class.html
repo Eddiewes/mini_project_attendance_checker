@@ -1,0 +1,33 @@
+<!-- templates/classes/class.html -->
+
+{% extends 'core/base.html' %}
+{% block title %}{{ class.class_name }}{% endblock title %}
+{% block content %}
+<div class=" text-black font-bold py-2 px-4 rounded"><h1>{{ class.class_name }}</h1></div>
+
+<!-- Display class details -->
+
+<!-- Display related events " -->
+<a href="{% url 'add_event' username=user.username coursename=coursename classname=class.class_name %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Add Event</a>
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+    <h2 class="mb-12 text-2xl text-center"><u>Events for {{ class.class_name }}</u></h2>
+   
+    {% if events %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {% for event in events %}
+                <div>
+                    <!-- Display event details -->
+                    <div class=" text-black bg-white p-8 rounded-xl flex justify-center items-center h-full">
+                        <h2>{{ event.event_name }}</h2>
+                        <p>Start Time: {{ event.start_time }}</p>
+                        <p>End Time: {{ event.end_time }}</p>
+                        
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No events created yet for this class.</p>
+    {% endif %}
+</div>
+{% endblock %}
