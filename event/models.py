@@ -1,6 +1,7 @@
 from django.db import models
 from classes.models import Class
 from django_google_maps.fields import AddressField, GeoLocationField  
+from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
     event_id = models.AutoField(primary_key=True)
@@ -10,6 +11,7 @@ class Event(models.Model):
     end_time = models.DateTimeField()
     location_address = AddressField(max_length=200,null=True)
     geolocation = GeoLocationField(max_length=100,null=True)
+    radius = models.DecimalField(_("Radius"), max_digits=5, decimal_places=2)
     is_student_id_required = models.BooleanField(default=False)
     is_index_number_required = models.BooleanField(default=False)
     is_student_name_required = models.BooleanField(default=False)
