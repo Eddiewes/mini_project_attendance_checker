@@ -40,8 +40,8 @@
       <label class="block mb-2" for="id_location_address">Location Address</label>
       <input id="id_location_address" type="text" name="location_address" class="form-control">
       <input id="id_geolocation" type="hidden" name="geolocation">
-      <input id="lat" type="hidden">
-      <input id="lng" type="hidden">
+      <input name="lat" id="lat" type="hidden">
+      <input name="lng" id="lng" type="hidden">
     </div>
 
     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Event</button>
@@ -62,8 +62,8 @@
     
     const map = new Map(document.getElementById("map"), {
       zoom: 20,
-      // center: { lat: 37.09, lng: -95.712 },
-       center: mainPoint,
+      // center: { lat:   37.09, lng: -95.712 },
+      center: mainPoint,
       mapTypeId: "satellite",
       gestureHandling: "cooperative",
 
@@ -88,10 +88,8 @@
   const marker = new AdvancedMarkerElement({
   map: map,
   position: mainPoint,
-  content: "Checkout",
   title: "Checkout",
   gmpDraggable: true,
-
   })
 
   marker;
