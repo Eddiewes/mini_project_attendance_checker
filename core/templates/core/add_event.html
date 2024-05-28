@@ -37,9 +37,9 @@
     <input id="geolocation" type="hidden">
     <!-- Google Maps Autocomplete -->
     <div class="mb-6">
-      <label class="block mb-2" for="id_location_address">Location Address</label>
-      <input id="id_location_address" type="text" name="location_address" class="form-control">
-      <input id="id_geolocation" type="hidden" name="geolocation">
+      <!-- <label class="block mb-2" for="id_location_address">Location Address</label> -->
+      <!-- <input id="id_location_address" type="text" name="location_address" class="form-control"> -->
+      <!-- <input id="id_geolocation" type="hidden" name="geolocation"> -->
       <input name="lat" id="lat" type="hidden">
       <input name="lng" id="lng" type="hidden">
     </div>
@@ -62,14 +62,12 @@
     
     const map = new Map(document.getElementById("map"), {
       zoom: 20,
-      // center: { lat:   37.09, lng: -95.712 },
       center: mainPoint,
       mapTypeId: "satellite",
+      mapId: "4504f8b37365c3d0",
       gestureHandling: "cooperative",
 
     });
-    
-    //radius.addEventListener('input', () => {
     
     let cityCircle = new google.maps.Circle({
       strokeColor: "#FF0000",
@@ -85,7 +83,7 @@
   // })
 
   // map marker
-  const marker = new AdvancedMarkerElement({
+ const marker = new AdvancedMarkerElement({
   map: map,
   position: mainPoint,
   title: "Checkout",
@@ -93,16 +91,27 @@
   })
 
   marker;
-  document.getElementById("lat").value = mainPoint["lat"]
-  document.getElementById("lng").value = mainPoint["lng"]
+  
   radius.addEventListener('input', () => {
     console.log(radius.value);
-    //cityCircle.radius = parseInt(radius.value)
     initialRadius = parseFloat(radius.value)
     initMap()
     })
+
+  marker.addListener('dragend', function (event) {
+  let lat =  event.latLng.lat();
+  let lng =  event.latLng.lng(); 
+  mainPoint["lat"] = lat;
+  mainPoint["lng"] = lng;
+    changeMainpoint(lat, lng);
+  initMap();
+    })
   }
 
+  function changeMainpoint(lat, lng){
+  document.getElementById("lat").value = lat;
+  document.getElementById("lng").value = lng;
+    }
   initMap();
   </script>
 
