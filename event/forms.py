@@ -5,7 +5,12 @@ from .models import Event
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['event_name', 'start_time', 'end_time', 'location_address', 'geolocation', 'radius' ,'is_student_id_required', 'is_index_number_required', 'is_student_name_required']
+        fields = ['event_name',
+                  'start_time', 'end_time', 
+                  'location_address', 'geolocation',
+                  'radius' ,'is_student_id_required',
+                  'is_index_number_required',
+                  'is_student_name_required']
         widgets = {
             'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),

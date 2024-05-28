@@ -13,15 +13,16 @@ def add_event(request: HttpRequest, username, coursename, classname):
 
     if request.method == 'POST':
         form = EventForm(request.POST)
-        # lng and lat
-        lng = request.POST.get("lng")
-        lat = request.POST.get("lat")
         if form.is_valid():
             
             event = form.save(commit=False)
             event.related_class = class_obj
             event.location_address = form.cleaned_data['location_address']
             event.geolocation = form.cleaned_data['geolocation']
+            
+            event.checkpoint_lat = request.POST.get("checkpoint_lat")
+            event.checkpoint_lng = request.POST.get("checkpoint_lng")
+            """checking if the cordinates came through"""
             # Assign the class name and course name from the class object
            
             event.save()
